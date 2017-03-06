@@ -12,8 +12,11 @@ public:
 
   void (*triggerCB)();
   void (*startCB)();
+  void (*everyCountCB)();
   void (*resetCB)();
 
+  // declaration function. Takes the input pin, number of
+  // counts to trigger, and the reset time as arguments. 
   rotaryControl(int pin, int maxCnt = 30, int TO = 1000){
     hallInput = pin;
     prevState = 1;
@@ -22,7 +25,7 @@ public:
     counts = 0;
     maxCounts = maxCnt;
 
-    triggerCB = startCB = resetCB = NULL;
+    triggerCB = everyCountCB = startCB = resetCB = NULL;
 
     pinMode(hallInput,INPUT_PULLUP);
   }
@@ -41,6 +44,7 @@ public:
   
         //print the number of counts seen
         //Serial.println(counts,DEC);
+        if(everyCountCB) everyCountCB();
   
         // if we're home, and we've seen three counts, do start callback.
         if(counts == 1 && startCB) startCB();

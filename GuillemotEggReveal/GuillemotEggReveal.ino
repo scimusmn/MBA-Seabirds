@@ -78,9 +78,6 @@ void trackTogether(){
     right.setSpeed(rightSpeed);
     left.setSpeed(leftSpeed);
   }
-  
- // if(right.running) right.setSpeed(rightSpeed);
- // if(left.running) left.setSpeed(leftSpeed);
 }
 
 void setup() {

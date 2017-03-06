@@ -26,6 +26,9 @@ rotaryControl crank(14,10,1000);
 // Set the delay times at the end of the jump, specified in milliseconds
 int endDelay = 3000;
 
+// Set the delay times at the end of the jump, specified in milliseconds
+int homeDelay = 2000;
+
 // Number of counts before the chick jumps off the cliff.
 int jumpCount = 10;
 
@@ -85,6 +88,10 @@ signed int fallSteps (float osc){
 
 bool home = true;
 bool hopping = false;
+bool playing = false;
+
+int playerTrigger = 7;
+int playerSignal = 17;
 
 void jumpEnd(){
   // sets how long the motor can run without reaching a stop. Set to 0 to run indefinitely.
@@ -129,7 +136,7 @@ void startHopping(){
 void wait(){
   // set the home flag, to let the program know we're home.
   Serial.println("Returned home");
-  
+  delay(homeDelay);
   home = true;
 }
 
@@ -148,13 +155,26 @@ void resetChick(){
   }
 }
 
+void triggerAudio(){
+  if(digitalRead(playerSignal)){
+    digitalWrite(playerTrigger,HIGH);
+    delay(25);
+    digitalWrite(playerTrigger,LOW);
+    delay(25);
+  }
+}
+
 // setup function, which is run only once at the program start.
 void setup() {
   Serial.begin(9600);
+
+  pinMode(playerTrigger,OUTPUT);
+  pinMode(playerSignal,INPUT_PULLUP);
   
   crank.startCB = startHopping;
   crank.triggerCB = jump;
   crank.resetCB = resetChick;
+  crank.everyCountCB = triggerAudio;
   
   delay(5000);
 }
@@ -168,4 +188,5 @@ void loop() {
     //watch the crank input.
     crank.idle();
   }
+
 }

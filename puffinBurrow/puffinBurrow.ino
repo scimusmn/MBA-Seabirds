@@ -8,8 +8,7 @@
 
 //   actuator ( pulseOutPin, directionControlPin, enablePin, leftLimitSwitch, rightLimitSwitch
 
-actuator bird(3,5,6,16,15);
-
+actuator bird(3,6,5,16,15);
 
 ///////////////////////////////////////////////////
 //              Configurable options             //
@@ -17,7 +16,7 @@ actuator bird(3,5,6,16,15);
 
 // this is the distance which the bird will travel out to the
 // left in the burrow. It is specified in inches
-int distanceOut = 16; //in stepper counts
+int distanceOut = 12; //in stepper counts
 
 //time in seconds that it takes the LEDs to turn on or off
 float fadeTime = 1; 
@@ -26,8 +25,7 @@ float fadeTime = 1;
 // this is simply a flat speed with no wobbling. 
 // Units are inches per second, and 24 is about the limit.
 float returnProfile (float osc){
-  //return 20;
-  return 8 - cos(osc*8)*5;
+  return 20;
 }
 
 //movement profile for the journey outward.
@@ -82,6 +80,14 @@ void outAndHold(){
   //sit until the button is released.
   while(digitalRead(visButton) == LOW);
 
+  //ramp down the lights
+  for(int i=255; i>=0; i--){
+    analogWrite(lightPin,i);
+    delayMicroseconds(1000000*fadeTime/255);
+  }
+  // delay a second before the return movement starts
+  delay(1000);
+
   //set the speed profile to the return profile.
   bird.setSpeedProfile(returnSteps,true);
 
@@ -96,6 +102,12 @@ void outAndHold(){
 void goOut(){
   // clear the home flag, locking out the visitor button.
   home = false;
+
+  // ramp up the lights in the burrow.
+  for(int i=0; i<255; i++){
+    analogWrite(lightPin,i);
+    delayMicroseconds(1000000*fadeTime/255);
+  }
 
   //change the speed profile.
   bird.setSpeedProfile(outSteps,true);
