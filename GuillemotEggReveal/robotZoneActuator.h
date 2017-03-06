@@ -69,6 +69,7 @@ public:
 
   // set the speed of the movement
   void setSpeed(int sp){
+    if(sp > 255) sp = 255;
     speed = sp;
     analogWrite(pwmPin,speed);
   }
@@ -100,7 +101,7 @@ public:
 
   // returns a 0 to 1 value of how complete the movement is.
   float percentDone(){
-    return 1-float(target - ave)/float(target - init);
+    return 1-(float(target - ave)/float(target - init));
   }
 
   // tell the actuator to move to a target position.

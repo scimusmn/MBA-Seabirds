@@ -32,6 +32,7 @@ int visitorButton = 14;
 
 bool home = true;
 
+// if both of the rocks are done closing, set teh home flag.
 void wait(){
   if(right.running == false && left.running == false){
     home = true;
@@ -67,12 +68,19 @@ void openRocks(){
 // rock that is moving faster based on that percentage difference.
 
 void trackTogether(){
-  float pDiff = right.percentDone() - left.percentDone();
-  //pDiff = max(-.5,min(.5,pDiff));
-  int leftSpeed = constrain(255*(1 + pDiff*32),0,255);
-  int rightSpeed = constrain(255*(1 - pDiff*32),0,255);
-  right.setSpeed(rightSpeed);
-  left.setSpeed(leftSpeed);
+  if(right.running && left.running){
+    float pDiff = right.percentDone() - left.percentDone();
+    //pDiff = max(-.5,min(.5,pDiff));
+    int leftSpeed = constrain(255*(1 + pDiff*8),0,254);
+    int rightSpeed = constrain(255*(1 - pDiff*8),0,254);
+    Serial.println(pDiff,DEC);
+
+    right.setSpeed(rightSpeed);
+    left.setSpeed(leftSpeed);
+  }
+  
+ // if(right.running) right.setSpeed(rightSpeed);
+ // if(left.running) left.setSpeed(leftSpeed);
 }
 
 void setup() {
@@ -95,5 +103,5 @@ void loop() {
     openRocks();
   }
 
-  //trackTogether();
+  trackTogether();
 }
