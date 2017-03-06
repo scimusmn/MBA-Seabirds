@@ -14,7 +14,13 @@
 
 rotaryControl crank(14,12,1000);
 
-actuator bird(7,6,1);
+// declare teh linear actuator object. Arguments are as follows
+//    actuator( direction pin,
+//              speed pin,
+//              analog input pin,
+//              boolean value of whether or not to invert direction.
+
+actuator bird(7,6,1,false);
 
 dcMotor egg(5,3,17,16);
 
@@ -31,50 +37,8 @@ int eggOutTime = 2000; //in milliseconds
 
 bool home = true;
 
-/*class hBridge {
-public:
-  int pwmPin;
-  int dirPin;
-  int dir;
-  int speed;
-
-  hBridge(int d, int pwm){
-    pwmPin = pwm;
-    dirPin = d;
-    speed = 0;
-    dir = 0;
-
-    pinMode(pwmPin,OUTPUT);
-    pinMode(dirPin,OUTPUT);
-    digitalWrite(dirPin,LOW);
-    digitalWrite(pwmPin,LOW);
-  }
-
-  int direction(){
-    return dir;
-  }
-
-  void setSpeed(int sp){
-    speed = sp;
-  }
-  void setDirection(int d){
-    dir = d;
-    digitalWrite(dirPin,dir);
-  }
-  void start(){
-    analogWrite(pwmPin,speed);
-  }
-  void stop(){
-    analogWrite(pwmPin,0);
-  }
-  void run(int spd){
-    speed = abs(spd);
-    dir = (spd>=0);
-    digitalWrite(dirPin,dir);
-    analogWrite(pwmPin,speed);
-  }
-};*/
-
+// tells the bird to go up, and sets a call back for 
+// what to do once it gets there.
 void birdUp(){
   Serial.println("Bird goes up!");
   home = false;
@@ -82,12 +46,16 @@ void birdUp(){
   bird.run(600);
 }
 
+// tells the egg to roll out, and sets a call back for 
+// what to do once it gets there.
 void eggOut(){
   Serial.println("Egg goes out!");
   egg.endCB = eggBack;
   egg.run(255);
 }
 
+// tells the egg to roll back, and sets a call back for 
+// what to do once it gets there.
 void eggBack(){
   Serial.println("Egg goes back!");
   delay(eggOutTime);
@@ -106,10 +74,10 @@ void wait(){
 }
 
 void setup() {
-  //pinMode(homeSensor,INPUT_PULLUP);
-  //pinMode(outSensor,INPUT_PULLUP);
+  // set the trigger callback for the crank
   crank.triggerCB = birdUp;
 
+  // delay five seconds to give ourselves time to upload
   delay(5000);
 
   Serial.begin(9600);
@@ -121,19 +89,4 @@ void loop() {
 
   if(home) crank.idle();
 
-  /*bird.run(-255);
-  while(analogRead(laPot)<600);
-  bird.stop();
-  egg.run(255);
-  while (digitalRead(homeSensor) != LOW);
-  egg.stop();
-  delay(500);
-  egg.run(-255);
-  while (digitalRead(outSensor) != LOW);
-  egg.stop();
-  bird.run(255);
-  while(analogRead(laPot)>=100);
-  bird.stop();
-
-  delay(2000);*/
 }

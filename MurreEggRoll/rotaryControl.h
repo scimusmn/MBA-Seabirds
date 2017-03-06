@@ -14,6 +14,8 @@ public:
   void (*startCB)();
   void (*resetCB)();
 
+  // declaration function. Takes the input pin, number of
+  // counts to trigger, and the reset time as arguments. 
   rotaryControl(int pin, int maxCnt = 30, int TO = 1000){
     hallInput = pin;
     prevState = 1;

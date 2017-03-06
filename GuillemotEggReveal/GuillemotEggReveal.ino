@@ -1,5 +1,24 @@
 #include "robotZoneActuator.h"
 
+///////////////////////////////////////////////////
+//                  Declarations                 //
+///////////////////////////////////////////////////
+
+// declare teh linear actuator object. Arguments are as follows
+//    actuator( direction pin,
+//              speed pin,
+//              analog input pin,
+//              boolean value of whether or not to invert direction.
+
+
+actuator left(7,6,2,true);
+actuator right(5,3,1,true);
+
+///////////////////////////////////////////////////
+//              Configurable options             //
+///////////////////////////////////////////////////
+
+
 int delayOnOpen = 1000; //in milliseconds
 int delayBetweenCycles = 1000;
 
@@ -10,9 +29,6 @@ int delayBetweenCycles = 1000;
 int homeSensor = 16;
 int outSensor = 17;
 int visitorButton = 14;
-
-actuator left(7,6,2);
-actuator right(5,3,1);
 
 bool home = true;
 
