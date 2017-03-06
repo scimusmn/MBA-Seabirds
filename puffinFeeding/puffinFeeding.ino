@@ -19,8 +19,8 @@ actuator bird(3,5,6,16,15);
 // left in the burrow. It is specified in inches
 int distanceOut = 16; //in stepper counts
 
-//time in seconds that it takes the LEDs to turn on or off
-float fadeTime = 1; 
+//time in seconds that the bird pauses at teh chicks
+float holdTime = 1000; 
 
 // movement profile for the return journey of the bird
 // this is simply a flat speed with no wobbling. 
@@ -81,6 +81,7 @@ void sitAtHome(){
 void outAndHold(){
   //sit until the button is released.
   while(digitalRead(visButton) == LOW);
+  delay(holdTime);
 
   //set the speed profile to the return profile.
   bird.setSpeedProfile(returnSteps,true);
