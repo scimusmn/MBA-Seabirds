@@ -37,16 +37,24 @@ unsigned long repeatTimer = 0;
 int repeatCount = 0;
 bool logRepeat = false;
 
+// function which handles a read from the sensor
 void onRead (int val){
   if(val > 100){
+    // if the read is greater than 100, start playing
     playing = true;
     Serial.println("Playing audio");
-    digitalWrite(audioTrigger,HIGH);
-    delay(1000);
+    // press the play button until we see confirmation that we're playing
+    while(digitalRead(playerSignal)){
+      digitalWrite(playerTrigger,HIGH);
+      delay(50);
+      digitalWrite(playerTrigger,LOW);
+      delay(50);
+    }
   }
 }
 
 void setup() {
+  // init GPIOs
   pinMode(audioTrigger,OUTPUT);
   pinMode(audioSignal,INPUT_PULLUP);
   
@@ -58,26 +66,40 @@ void setup() {
 }
 
 void loop() {
+  // if we aren't playing, watch the sensor
   if(!playing) distance.idle();
 
+  // if we are playing, and the relay indicates the audio stopped,
   if(playing && digitalRead(audioSignal)){
     Serial.println("Audio finished");
+    // clear the playing flag
     playing = false;
 
+    // if we have a repeat time set
     if(repeatTime){
+      // start the timer, and set the repeat flag. 
       repeatTimer = millis() + repeatTime;
       logRepeat = true;
     }
   }
 
+  // if the sensor has dropped below the trigger threshold,
+  // reset the repeat counter
   if(!distance.active()) repeatCount = 0;
 
+  // if the repeat timer has just elapsed
   if(repeatTime && millis() > repeatTimer && logRepeat){
+    // clear the flag so we don't do this twice.
     logRepeat = false;
+
+    // and if the sensor is still reading high,
+    // and we've repeated less than maxRepeats
     if(distance.stillHigh){
       if(repeatCount < maxRepeats){
+        //increment the repeat counter
         repeatCount++;
-        distance.reset();
+        // and reenable the sensor.
+        distance.reenable();
       }
     }
       
