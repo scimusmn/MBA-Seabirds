@@ -7,10 +7,10 @@
 // declare the Sharp sensor object. Arguments are as follows:
 // 
 // Sensor ( analog pin number to which the signal is attached,
-//          min value before a read is detected (0-255),
+//          min value before a read is detected (0-1024),
 //          amount of time that the sensor averages after a high read
 
-Sensor distance(0,60,500);
+Sensor distance(0,170,500);
 
 ///////////////////////////////////////////////////
 //              Configurable options             //
@@ -38,11 +38,14 @@ int repeatCount = 0;
 bool logRepeat = false;
 
 // function which handles a read from the sensor
-void onRead (int val){
-  if(val > 250){
+bool onRead (int val){
+  bool ret = false;
+  //Serial.println(val, DEC);
+  if(val > 170 && !playing){
     // if the read is greater than 100, start playing
+    ret = true;
     playing = true;
-    Serial.println(val,DEC);
+    Serial.print(val,DEC);
     Serial.println(" Playing audio");
     digitalWrite(13,HIGH);
     // press the play button until we see confirmation that we're playing
@@ -53,6 +56,7 @@ void onRead (int val){
       delay(50);
     }
   }
+  return ret;
 }
 
 void setup() {

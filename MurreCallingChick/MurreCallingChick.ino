@@ -156,12 +156,12 @@ void resetChick(){
   }
 }
 
+unsigned long audioTO = 0;
+
 void triggerAudio(){
-  if(digitalRead(playerSignal)){
+  if(digitalRead(playerSignal) && audioTO < millis()){
     digitalWrite(playerTrigger,HIGH);
-    delay(25);
-    digitalWrite(playerTrigger,LOW);
-    delay(25);
+    audioTO = millis() + 100;
   }
 }
 
@@ -190,6 +190,10 @@ void loop() {
   if(home || hopping){
     //watch the crank input.
     crank.idle();
+  }
+
+  if(audioTO < millis()){
+    digitalWrite(playerTrigger,LOW);
   }
 
 }
