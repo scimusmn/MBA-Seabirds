@@ -12,6 +12,9 @@ public:
   int ccwPin;
   int speed;
 
+  unsigned long runTimer = 0;
+  int runTimeout = 0;
+
   // callback for end of movement.
   void (*endCB)();
 
@@ -50,6 +53,7 @@ public:
     dir = (spd>=0);
     digitalWrite(dirPin,dir);
     analogWrite(pwmPin,speed);
+    runTimer = millis() + runTimeout;
   }
 
   // run without looking for the stops.
@@ -58,6 +62,14 @@ public:
     dir = (spd>=0);
     digitalWrite(dirPin,dir);
     analogWrite(pwmPin,speed);
+  }
+
+  bool negativeSensor(){
+    return digitalRead(cwPin);
+  }
+
+  bool positiveSensor(){
+    return digitalRead(ccwPin);
   }
 
   void idle(){
@@ -71,6 +83,11 @@ public:
       } else if(digitalRead(ccwPin) == LOW && dir){
         //if we're running counterclockwise and hit the ccw stop,
         // stop and do callback.
+        stop();
+        if(endCB) endCB();
+      }
+
+      if(runTimer < millis()){
         stop();
         if(endCB) endCB();
       }

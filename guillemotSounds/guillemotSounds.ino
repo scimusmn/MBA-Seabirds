@@ -39,15 +39,17 @@ bool logRepeat = false;
 
 // function which handles a read from the sensor
 void onRead (int val){
-  if(val > 100){
+  if(val > 250){
     // if the read is greater than 100, start playing
     playing = true;
-    Serial.println("Playing audio");
+    Serial.println(val,DEC);
+    Serial.println(" Playing audio");
+    digitalWrite(13,HIGH);
     // press the play button until we see confirmation that we're playing
-    while(digitalRead(playerSignal)){
-      digitalWrite(playerTrigger,HIGH);
+    while(digitalRead(audioSignal)){
+      digitalWrite(audioTrigger,HIGH);
       delay(50);
-      digitalWrite(playerTrigger,LOW);
+      digitalWrite(audioTrigger,LOW);
       delay(50);
     }
   }
@@ -57,6 +59,7 @@ void setup() {
   // init GPIOs
   pinMode(audioTrigger,OUTPUT);
   pinMode(audioSignal,INPUT_PULLUP);
+  pinMode(13,OUTPUT);
   
   distance.triggerCB = onRead;
   Serial.begin(9600);
@@ -67,13 +70,15 @@ void setup() {
 
 void loop() {
   // if we aren't playing, watch the sensor
-  if(!playing) distance.idle();
+  distance.idle(!playing);
 
   // if we are playing, and the relay indicates the audio stopped,
   if(playing && digitalRead(audioSignal)){
     Serial.println("Audio finished");
     // clear the playing flag
     playing = false;
+
+    digitalWrite(13,LOW);
 
     // if we have a repeat time set
     if(repeatTime){
@@ -94,7 +99,7 @@ void loop() {
 
     // and if the sensor is still reading high,
     // and we've repeated less than maxRepeats
-    if(distance.stillHigh){
+    if(distance.cbDone){
       if(repeatCount < maxRepeats){
         //increment the repeat counter
         repeatCount++;

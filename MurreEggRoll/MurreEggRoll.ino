@@ -9,12 +9,12 @@
 // declare the rotary control object. Arguments are as follows
 
 //    rotaryControl( pin number for input ,
-//                   number of counts before triggering (default is 30),
-//                   timeout before resetting counts (default is 1000 ms)){
+//                   number of counts before triggering (default is 12),
+//                   timeout before resetting counts (default is 500 ms)
 
-rotaryControl crank(14,12,100);
+rotaryControl crank(14,12,500);
 
-// declare teh linear actuator object. Arguments are as follows
+// declare the linear actuator object. Arguments are as follows
 //    actuator( direction pin,
 //              speed pin,
 //              analog input pin,
@@ -37,6 +37,8 @@ int eggOutTime = 2000; //in milliseconds
 
 int minTriggerTime = 2000;
 
+// Maximum time that the DC motor can run before we assume it's broken
+int runTimeout = 4000;
 
 ///////////////////////////////////////////////////
 // You should not need to edit below this point  //
@@ -71,6 +73,7 @@ void eggBack(){
 }
 
 void birdDown(){
+  while(egg.negativeSensor());
   Serial.println("Bird goes down!");
   bird.endCB = wait;
   bird.run(50);
@@ -85,6 +88,8 @@ void setup() {
   crank.triggerCB = birdUp;
 
   crank.triggerTime = minTriggerTime;
+
+  egg.runTimeout = runTimeout;
 
   // delay five seconds to give ourselves time to upload
   delay(5000);

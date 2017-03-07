@@ -19,9 +19,9 @@ actuator chick(2,4,5,14,16);
 int endDelay = 1000;
 
 // The distance from center offset of each of the birds in the home position, in inches.
-// Positive Value is to the left, negative is to the right
+// Positive Value is to the right, negative is to the leftt
 float chickCenter = 0;
-float parentCenter = -0.5;
+float parentCenter = 0.5;
 
 // Movement profile for the parent. Mostly flat, with a little wobble. 
 // Units are inches per second, and 24 is about the limit.
@@ -89,7 +89,7 @@ void pLeftSide(){
   // if the joystick was pressed in the other direction, send to the other side.
   // Otherwise, return to the center. 
   if(digitalRead(18) == LOW) goRight();
-  else chick.runByCounts((totalTravel/2 - chickCenter)*stepsPerInch,0,10000);
+  else chick.runByCounts((totalTravel/2 + chickCenter)*stepsPerInch,0,10000);
 }
 
 // what happens when the parent reaches the right side, similar to pLeftSide
@@ -98,7 +98,7 @@ void pRightSide(){
   while(digitalRead(18) == LOW);
   delay(endDelay);
   if(digitalRead(12) == LOW) goLeft();
-  else chick.runByCounts((totalTravel/2  + chickCenter)*stepsPerInch,1,6400);
+  else chick.runByCounts((totalTravel/2  - chickCenter)*stepsPerInch,1,6400);
 }
 
 // what happens when the chick reaches the left side
@@ -107,25 +107,25 @@ void leftSide(){
   parent.registerEndCB(pLeftSide);
 
   // send the parent to the left.
-  parent.run(0,6400);
+  parent.run(0);
 }
 
 // what happens when the chick reaches the right side
 void rightSide(){
   parent.registerEndCB(pRightSide);
-  parent.run(1,6400);
+  parent.run(1);
 }
 
 // what happens when the chick returns to center from the left
 void centerLeft(){
   parent.registerEndCB(wait);
-  parent.runByCounts((totalTravel/2 - parentCenter)*stepsPerInch,1,6400);
+  parent.runByCounts((totalTravel/2 + parentCenter)*stepsPerInch,1,6400);
 }
 
 // what happens when the chick returns to center from the right
 void centerRight(){
   parent.registerEndCB(wait);
-  parent.runByCounts((totalTravel/2 + parentCenter) *stepsPerInch,0,6400);
+  parent.runByCounts((totalTravel/2 - parentCenter) *stepsPerInch,0,6400);
 }
 
 // sends the chick to the right.
@@ -134,7 +134,7 @@ void goRight(){
   
   // let the program know that we aren't at home.
   home = false;
-  chick.run(0,6400);
+  chick.run(0);
 }
 
 //sends the chick to the left.
@@ -143,7 +143,7 @@ void goLeft(){
   
   // let the program know that we aren't at home.
   home = false;
-  chick.run(1,6400);
+  chick.run(1);
 }
 
 // what happens when the parent returns to center.

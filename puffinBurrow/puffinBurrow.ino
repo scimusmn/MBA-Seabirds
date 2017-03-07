@@ -16,7 +16,7 @@ actuator bird(3,6,5,16,15);
 
 // this is the distance which the bird will travel out to the
 // left in the burrow. It is specified in inches
-int distanceOut = 12; //in stepper counts
+int distanceOut = 16; //in stepper counts
 
 //time in seconds that it takes the LEDs to turn on or off
 float fadeTime = 1; 
