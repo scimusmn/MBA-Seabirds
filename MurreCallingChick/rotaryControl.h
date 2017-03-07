@@ -7,6 +7,8 @@ public:
   int prevState;
   unsigned long timer;
   int timeout;
+  unsigned long triggerTimer;
+  int triggerTime;
   int counts;
   int maxCounts;
 
@@ -22,6 +24,7 @@ public:
     prevState = 1;
     timer = 0;
     timeout = TO;
+    triggerTime = 0;
     counts = 0;
     maxCounts = maxCnt;
 
@@ -46,18 +49,25 @@ public:
         //Serial.println(counts,DEC);
         if(everyCountCB) everyCountCB();
   
-        // if we're home, and we've seen three counts, do start callback.
-        if(counts == 1 && startCB) startCB();
+        // if we're home, and we've seen one count, do start callback.
+        if(counts == 1){
+          if(startCB) startCB();
+          if(triggerTime){
+            triggerTimer = millis() + triggerTime;
+            Serial.println("reset timer");
+          }
+        }
 
         //if we've seen maxCounts,
-        if(counts == maxCounts){
+        if(counts == maxCounts && (triggerTime == 0 || \
+            triggerTime && triggerTimer < millis())){
   
           //reset the counter
           counts = 0;
 
           // and do the trigger callback
           if(triggerCB) triggerCB();
-        }
+        } 
       }
     }
 

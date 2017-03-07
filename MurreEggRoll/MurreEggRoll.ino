@@ -12,7 +12,7 @@
 //                   number of counts before triggering (default is 30),
 //                   timeout before resetting counts (default is 1000 ms)){
 
-rotaryControl crank(14,12,1000);
+rotaryControl crank(14,12,100);
 
 // declare teh linear actuator object. Arguments are as follows
 //    actuator( direction pin,
@@ -29,6 +29,13 @@ dcMotor egg(5,3,17,16);
 ///////////////////////////////////////////////////
 
 int eggOutTime = 2000; //in milliseconds
+
+// Time that the visitor has to crank before triggering.
+// If set to any number besides zero, visitor still has to crank
+// a minimum of the counts specified above, but they also
+// have to be cranking for a minimum of minTriggerTime milliseconds.
+
+int minTriggerTime = 2000;
 
 
 ///////////////////////////////////////////////////
@@ -76,6 +83,8 @@ void wait(){
 void setup() {
   // set the trigger callback for the crank
   crank.triggerCB = birdUp;
+
+  crank.triggerTime = minTriggerTime;
 
   // delay five seconds to give ourselves time to upload
   delay(5000);

@@ -1,6 +1,17 @@
 #include "linearTrackActuators.h"
 
 ///////////////////////////////////////////////////
+//                  Declarations                 //
+///////////////////////////////////////////////////
+
+//declare the actuator objects. The arguments are as follows:
+
+//   actuator ( pulseOutPin, directionControlPin, enablePin, leftLimitSwitch, rightLimitSwitch )
+
+actuator parent(9,7,10,17,15);
+actuator chick(2,4,5,14,16);
+
+///////////////////////////////////////////////////
 //              Configurable options             //
 ///////////////////////////////////////////////////
 
@@ -61,13 +72,6 @@ signed int parentSteps (float osc){
 signed int chickSteps (float osc){
   return chickProfile(osc)*stepsPerInch;
 }
-
-//declare the actuator objects. The arguments are as follows:
-
-//   actuator ( pulseOutPin, directionControlPin, enablePin, leftLimitSwitch, rightLimitSwitch )
-
-actuator parent(9,7,10,17,15);
-actuator chick(2,4,5,14,16);
 
 bool home = false;
 

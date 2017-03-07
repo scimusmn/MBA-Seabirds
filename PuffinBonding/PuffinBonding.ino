@@ -16,6 +16,13 @@ rotaryControl crank(14,12,1000);
 //              Configurable options             //
 ///////////////////////////////////////////////////
 
+// Time that the visitor has to crank before triggering.
+// If set to any number besides zero, visitor still has to crank
+// a minimum of the counts specified above, but they also
+// have to be cranking for a minimum of minTriggerTime milliseconds.
+
+int minTriggerTime = 2000;
+
 // Set the speed of the puffins movement. This is a value from 0 to 255, 255 being full speed.
 int bondingSpeed = 255;
 
@@ -54,8 +61,9 @@ void startBonding (){
   // press the play button until we see confirmation that we're playing
   while(digitalRead(playerSignal)){
     digitalWrite(playerTrigger,HIGH);
-    delay(100);
+    delay(50);
     digitalWrite(playerTrigger,LOW);
+    delay(50);
   }
 
   // write the motor to the speed specified above.
@@ -74,6 +82,8 @@ void setup() {
 
   //set the trigger callback.
   crank.triggerCB = startBonding;
+
+  crank.triggerTime = minTriggerTime;
 
   delay(5000);
 }

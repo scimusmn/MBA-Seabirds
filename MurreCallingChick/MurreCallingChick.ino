@@ -29,11 +29,12 @@ int endDelay = 3000;
 // Set the delay times at the end of the jump, specified in milliseconds
 int homeDelay = 2000;
 
-// Number of counts before the chick jumps off the cliff.
-int jumpCount = 10;
+// Time that the visitor has to crank before triggering.
+// If set to any number besides zero, visitor still has to crank
+// a minimum of the counts specified above, but they also
+// have to be cranking for a minimum of minTriggerTime milliseconds.
 
-// Time before the counter resets on seeing no interaction
-int resetTime = 5000;
+int minTriggerTime = 3000;
 
 // Movement profile for the chick.
 // Default produces a forward motion with 
@@ -175,6 +176,8 @@ void setup() {
   crank.triggerCB = jump;
   crank.resetCB = resetChick;
   crank.everyCountCB = triggerAudio;
+
+  crank.triggerTime = minTriggerTime;
   
   delay(5000);
 }
