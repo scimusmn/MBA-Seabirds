@@ -21,6 +21,10 @@ int distanceOut = 12; //in stepper counts
 //time in seconds that it takes the LEDs to turn on or off
 float fadeTime = 1; 
 
+// maximum time that a bird can move before the program
+// assumes that the limit switch is broken (in mS)
+int runTimeout = 10000;
+
 // movement profile for the return journey of the bird
 // this is simply a flat speed with no wobbling. 
 // Units are inches per second, and 24 is about the limit.
@@ -120,6 +124,7 @@ void goOut(){
 }
 
 void setup() {
+  bird.runTimeout = runTimeout;
   pinMode(visButton,INPUT_PULLUP);
 
   delay(5000);

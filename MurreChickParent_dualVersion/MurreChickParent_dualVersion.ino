@@ -153,6 +153,9 @@ void wait(){
 }
 
 void setup() {
+  chick.runTimeout = 10000;
+  parent.runTimeout = 10000;
+  
   parent.setSpeedProfile(parentSteps,true);
 
   chick.setSpeedProfile(chickSteps,true);
