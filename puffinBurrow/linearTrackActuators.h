@@ -161,6 +161,7 @@ public:
     countRun = true;
     counts = cnts;
     running = true;
+    runTmr = millis()+runTimeout;
     float ppms = pps/1000.;
     tmr = millis() + counts/ppms;
     digitalWrite(dirPin,dir);
@@ -185,7 +186,7 @@ public:
       if(endCB) endCB();
     }
 
-    if(countRun && running && countRun && ((!useProfile && millis()>tmr) || counts <=0)){
+    if(countRun && running && ((!useProfile && millis()>tmr) || counts <=0)){
       running = false;
       countRun = false;
       stop();

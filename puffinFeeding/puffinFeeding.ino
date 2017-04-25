@@ -6,7 +6,11 @@
 
 //declare the actuator object. The arguments are as follows:
 
-//   actuator ( pulseOutPin, directionControlPin, enablePin, leftLimitSwitch, rightLimitSwitch
+//   actuator ( pulseOutPin,
+//              directionControlPin,
+//              enablePin,
+//              leftLimitSwitch,
+//              rightLimitSwitch)
 
 actuator bird(3,5,6,16,15);
 
